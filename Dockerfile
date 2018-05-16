@@ -101,10 +101,7 @@ RUN cd /tmp                                           && \
 
 
 #install cpan
-RUN curl -L https://cpanmin.us | perl - --sudo App::cpanminus
-
-#update
-RUN cpanm --self-upgrade --sudo
+RUN apt-get install -y cpanminus
 
 # Install perl modules 
 RUN cpanm mysql \
