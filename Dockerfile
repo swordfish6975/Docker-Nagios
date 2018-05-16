@@ -22,6 +22,8 @@ ENV NAGIOS_PLUGINS_BRANCH  release-2.2.1
 ENV NRPE_BRANCH            nrpe-3.2.1
 
 
+
+
 RUN echo postfix postfix/main_mailer_type string "'Internet Site'" | debconf-set-selections  && \
     echo postfix postfix/mynetworks string "127.0.0.0/8" | debconf-set-selections            && \
     echo postfix postfix/mailname string ${NAGIOS_FQDN} | debconf-set-selections             && \
@@ -96,9 +98,25 @@ RUN cd /tmp                                           && \
     make install                                      && \
     make clean
 
+
+# Install compiler and perl stuff
+RUN apt-get install --yes \
+ build-essential \
+ gcc-multilib \
+ apt-utils \
+ perl \
+ expat \
+ libexpat-dev 
+
+# Install perl modules 
+RUN apt-get install -y cpanminus
+
+RUN cpanm mysql \
+ Mozilla::CA
+
+
 ## Nagios 4.3.1 has leftover debug code which spams syslog every 15 seconds
 ## Its fixed in 4.3.2 and the patch can be removed then
-
 
 RUN cd /tmp                                                                          && \
     git clone https://github.com/NagiosEnterprises/nagioscore.git -b $NAGIOS_BRANCH  && \
