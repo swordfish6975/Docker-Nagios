@@ -99,15 +99,6 @@ RUN cd /tmp                                           && \
     make clean
 
 
-# Install compiler and perl stuff
-RUN apt-get install --yes \
- build-essential \
- gcc-multilib \
- apt-utils \
- perl \
- expat \
- libexpat-dev 
-
 # Install perl modules 
 RUN apt-get install -y cpanminus
 
