@@ -43,6 +43,7 @@ RUN echo postfix postfix/main_mailer_type string "'Internet Site'" | debconf-set
         iputils-ping                        \
         jq                                  \
         libapache2-mod-php                  \
+        perl                                \
         libcache-memcached-perl             \
         libcgi-pm-perl                      \
         libdbd-mysql-perl                   \
@@ -99,9 +100,13 @@ RUN cd /tmp                                           && \
     make clean
 
 
-# Install perl modules 
-RUN apt-get install -y cpanminus
+#install cpan
+RUN curl -L https://cpanmin.us | perl - --sudo App::cpanminus
 
+#update
+RUN cpanm --self-upgrade --sudo
+
+# Install perl modules 
 RUN cpanm mysql \
  Mozilla::CA
 
