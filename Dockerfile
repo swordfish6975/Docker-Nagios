@@ -104,7 +104,7 @@ RUN cd /tmp                                           && \
 RUN apt-get update && apt-get install -y cpanminus
 
 # Install perl modules 
-RUN cpanm mysql \
+RUN cpanm Mysql \
  Mozilla::CA
 
 
