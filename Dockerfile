@@ -101,7 +101,7 @@ RUN cd /tmp                                           && \
 
 
 #install cpan
-RUN apt-get install -y cpanminus
+RUN apt-get update && apt-get install -y cpanminus
 
 # Install perl modules 
 RUN cpanm mysql \
