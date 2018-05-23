@@ -256,23 +256,8 @@ RUN echo "ServerName ${NAGIOS_FQDN}" > /etc/apache2/conf-available/servername.co
 
 EXPOSE 80
 
-
-# Add crontab file in the cron directory
-ADD crontab /etc/cron.d/modem-cron
-
-# Give execution rights on the cron job
-RUN chmod 0644 /etc/cron.d/modem-cron
-
-#Install Cron
-RUN apt-get update
-RUN apt-get -y install cron
-
-
-# Run the command on container startup
-CMD cron 
-
-CMD /usr/local/bin/smsd
-
 VOLUME "${NAGIOS_HOME}/var" "${NAGIOS_HOME}/etc" "/var/log/apache2" "/opt/Custom-Nagios-Plugins" "/opt/nagiosgraph/var" "/opt/nagiosgraph/etc"
 
 CMD [ "/usr/local/bin/start_nagios" ]
+
+CMD [ "/usr/local/bin/smsd" ]
