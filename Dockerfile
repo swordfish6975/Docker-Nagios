@@ -264,5 +264,5 @@ RUN mkdir /var/spool/sms/failed
 
 COPY start.sh start.sh
 
-CMD ./start.sh
+CMD [ "/start.sh" ]
 
