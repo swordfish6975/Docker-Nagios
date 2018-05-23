@@ -262,16 +262,13 @@ ADD crontab /etc/cron.d/modem-cron
 # Give execution rights on the cron job
 RUN chmod 0644 /etc/cron.d/modem-cron
 
-# Create the log file to be able to run tail
-RUN touch /var/log/nagios/pager.log
-
 #Install Cron
 RUN apt-get update
 RUN apt-get -y install cron
 
 
 # Run the command on container startup
-CMD cron && tail -f /var/log/nagios/pager.log
+CMD cron 
 
 
 VOLUME "${NAGIOS_HOME}/var" "${NAGIOS_HOME}/etc" "/var/log/apache2" "/opt/Custom-Nagios-Plugins" "/opt/nagiosgraph/var" "/opt/nagiosgraph/etc"
