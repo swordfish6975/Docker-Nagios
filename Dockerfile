@@ -107,6 +107,11 @@ RUN apt-get update && apt-get install -y cpanminus
 RUN cpanm DBD::mysql \
  Mozilla::CA
 
+RUN wget http://smstools3.kekekasvi.com/packages/smstools3-3.1.21.tar.gz  && \
+    tar -xzf smstools*.tar.gz                                             && \
+    cd smstools3                                                          && \
+    make                                                                  && \
+    make install
 
 ## Nagios 4.3.1 has leftover debug code which spams syslog every 15 seconds
 ## Its fixed in 4.3.2 and the patch can be removed then
