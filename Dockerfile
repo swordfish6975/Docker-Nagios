@@ -261,5 +261,5 @@ VOLUME "${NAGIOS_HOME}/var" "${NAGIOS_HOME}/etc" "/var/log/apache2" "/opt/Custom
 
 RUN mkdir /var/spool/sms/failed
 
-CMD [ "/usr/local/bin/start_nagios && /usr/local/bin/smsd" ]
+CMD /usr/local/bin/start_nagios && /usr/local/bin/smsd
 
