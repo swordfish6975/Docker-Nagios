@@ -81,6 +81,7 @@ RUN echo postfix postfix/main_mailer_type string "'Internet Site'" | debconf-set
         snmpd                               \
         snmp-mibs-downloader                \
         unzip                               \
+        mailutils                           \
         nano                                \
         python                              \
                                                 && \
@@ -261,5 +262,7 @@ VOLUME "${NAGIOS_HOME}/var" "${NAGIOS_HOME}/etc" "/var/log/apache2" "/opt/Custom
 
 RUN mkdir /var/spool/sms/failed
 
-CMD /usr/local/bin/start_nagios && /usr/local/bin/smsd
+COPY start.sh start.sh
+
+CMD ./start.sh
 
