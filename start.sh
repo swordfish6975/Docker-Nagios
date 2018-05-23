@@ -1,8 +1,8 @@
 #!/bin/bash
 
-/usr/local/bin/smsd
+ln -s /usr/mail /usr/bin/mail
 
-sleep 1
+/usr/local/bin/smsd
 
 /usr/local/bin/start_nagios
 
