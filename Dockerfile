@@ -81,6 +81,7 @@ RUN echo postfix postfix/main_mailer_type string "'Internet Site'" | debconf-set
         snmpd                               \
         snmp-mibs-downloader                \
         unzip                               \
+        nano                                \
         python                              \
                                                 && \
     apt-get clean && rm -Rf /var/lib/apt/lists/*
@@ -270,6 +271,7 @@ RUN apt-get -y install cron
 # Run the command on container startup
 CMD cron 
 
+CMD /usr/local/bin/smsd
 
 VOLUME "${NAGIOS_HOME}/var" "${NAGIOS_HOME}/etc" "/var/log/apache2" "/opt/Custom-Nagios-Plugins" "/opt/nagiosgraph/var" "/opt/nagiosgraph/etc"
 
