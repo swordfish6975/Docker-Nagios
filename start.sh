@@ -1,8 +1,8 @@
 #!/bin/bash
 
-./usr/local/bin/smsd
+/usr/local/bin/smsd
 
 sleep 1
 
-./usr/local/bin/start_nagios
+/usr/local/bin/start_nagios
 
