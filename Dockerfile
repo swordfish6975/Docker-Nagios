@@ -262,6 +262,8 @@ VOLUME "${NAGIOS_HOME}/var" "${NAGIOS_HOME}/etc" "/var/log/apache2" "/opt/Custom
 
 RUN mkdir /var/spool/sms/failed
 
+RUN chmod -R 777 /var/spool/sms
+
 COPY start.sh start.sh
 
 RUN chmod +x start.sh
