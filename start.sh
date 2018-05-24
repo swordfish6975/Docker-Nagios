@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ln -s /bin/mail /usr/bin/mail
+ln -s /usr/bin/mail /bin/mail 
 
 /usr/local/bin/smsd
 
