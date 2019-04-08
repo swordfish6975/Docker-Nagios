@@ -17,9 +17,11 @@ ENV NG_NAGIOS_CONFIG_FILE  ${NAGIOS_HOME}/etc/nagios.cfg
 ENV NG_CGI_DIR             ${NAGIOS_HOME}/sbin
 ENV NG_WWW_DIR             ${NAGIOS_HOME}/share/nagiosgraph
 ENV NG_CGI_URL             /cgi-bin
-ENV NAGIOS_BRANCH          nagios-4.4.3
+ENV NAGIOS_BRANCH          nagios-4.3.4
 ENV NAGIOS_PLUGINS_BRANCH  release-2.2.1
 ENV NRPE_BRANCH            nrpe-3.2.1
+
+
 
 
 RUN echo postfix postfix/main_mailer_type string "'Internet Site'" | debconf-set-selections  && \
@@ -41,6 +43,7 @@ RUN echo postfix postfix/main_mailer_type string "'Internet Site'" | debconf-set
         iputils-ping                        \
         jq                                  \
         libapache2-mod-php                  \
+        perl                                \
         libcache-memcached-perl             \
         libcgi-pm-perl                      \
         libdbd-mysql-perl                   \
@@ -78,6 +81,8 @@ RUN echo postfix postfix/main_mailer_type string "'Internet Site'" | debconf-set
         snmpd                               \
         snmp-mibs-downloader                \
         unzip                               \
+        mailutils                           \
+        nano                                \
         python                              \
                                                 && \
     apt-get clean && rm -Rf /var/lib/apt/lists/*
@@ -95,7 +100,23 @@ RUN cd /tmp                                           && \
     make                                              && \
     make install                                      && \
     make clean                                        && \
-    cd /tmp && rm -Rf qstat
+
+
+#install cpan
+RUN apt-get update && apt-get install -y cpanminus
+
+# Install perl modules 
+RUN cpanm DBD::mysql \
+ Mozilla::CA
+
+RUN wget http://smstools3.kekekasvi.com/packages/smstools3-3.1.21.tar.gz  && \
+    tar -xzf smstools*.tar.gz                                             && \
+    cd smstools3                                                          && \
+    make                                                                  && \
+    make install
+
+## Nagios 4.3.1 has leftover debug code which spams syslog every 15 seconds
+## Its fixed in 4.3.2 and the patch can be removed then
 
 RUN cd /tmp                                                                          && \
     git clone https://github.com/NagiosEnterprises/nagioscore.git -b $NAGIOS_BRANCH  && \
@@ -121,6 +142,7 @@ RUN cd /tmp                                                                     
     git clone https://github.com/nagios-plugins/nagios-plugins.git -b $NAGIOS_PLUGINS_BRANCH  && \
     cd nagios-plugins                                                                         && \
     ./tools/setup                                                                             && \
+
     ./configure                                                 \
         --prefix=${NAGIOS_HOME}                                 \
         --with-ipv6                                             \
@@ -130,6 +152,7 @@ RUN cd /tmp                                                                     
     make install                                                                              && \
     make clean                                                                                && \
     mkdir -p /usr/lib/nagios/plugins                                                          && \
+
     ln -sf ${NAGIOS_HOME}/libexec/utils.pm /usr/lib/nagios/plugins                            && \
     cd /tmp && rm -Rf nagios-plugins
 
@@ -242,6 +265,17 @@ RUN echo "ServerName ${NAGIOS_FQDN}" > /etc/apache2/conf-available/servername.co
 
 EXPOSE 80
 
+
 VOLUME "${NAGIOS_HOME}/var" "${NAGIOS_HOME}/etc" "/var/log/apache2" "/opt/Custom-Nagios-Plugins" "/opt/nagiosgraph/var" "/opt/nagiosgraph/etc"
 
-CMD [ "/usr/local/bin/start_nagios" ]
+
+RUN mkdir /var/spool/sms/failed
+
+RUN chmod -R 777 /var/spool/sms
+
+COPY start.sh start.sh
+
+RUN chmod +x start.sh
+
+CMD [ "/start.sh" ]
+
