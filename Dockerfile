@@ -100,7 +100,7 @@ RUN cd /tmp                                           && \
     make                                              && \
     make install                                      && \
     make clean                                        && \
-
+    cd /tmp && rm -Rf qstat
 
 #install cpan
 RUN apt-get update && apt-get install -y cpanminus
